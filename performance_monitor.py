@@ -126,7 +126,24 @@ def send_feishu(results):
             "elements": elements
         }
     }
-    requests.post(CONFIG['notifications']['feishu']['webhook_url'], json=payload)
+    headers = {
+        "Content-Type": "application/json; charset=utf-8"
+    }
+    try:
+        # 必须使用 json=payload 自动处理序列化，并带上 headers
+        response = requests.post(
+            CONFIG['notifications']['feishu']['webhook_url'], 
+            json=payload, 
+            headers=headers
+        )
+        response_data = response.json()
+        
+        # 飞书如果返回错误码，打印出来方便调试
+        if response_data.get("code") != 0:
+            print(f"飞书 API 返回错误: {response_data.get('msg')}")
+            
+    except Exception as e:
+        print(f"发送飞书失败: {e}")
 
 def send_email(msg_content):
     conf = CONFIG['notifications']['email']
