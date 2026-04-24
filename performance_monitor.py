@@ -4,6 +4,8 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 # ================= 核心配置区 (建议以后可以放进 config.json) =================
 CONFIG = {
@@ -30,28 +32,44 @@ CONFIG = {
 }
 
 def fetch_real_user_data(url):
-    """从 PSI API 抓取真实用户 (Field Data) 数据"""
+    """增加重试机制的抓取函数"""
     api_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}&key={CONFIG['google_api_key']}&strategy=mobile"
+    
+    # 配置重试策略：重试3次，间隔时间指数增加
+    session = requests.Session()
+    retry_strategy = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504]
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("https://", adapter)
+
     try:
-        response = requests.get(api_url, timeout=30).json()
+        # 将 timeout 延长到 60 秒
+        response = session.get(api_url, timeout=60).json()
+        
+        # 检查是否有 API 级别的错误返回
+        if 'error' in response:
+            return {"url": url, "status": f"API Error: {response['error']['message']}"}
+            
         field_data = response.get('loadingExperience', {})
         
         if not field_data or 'metrics' not in field_data:
             return {"url": url, "status": "No Field Data (流量不足或新站)"}
 
-        # 提取 LCP (真实用户 75 分位值)
-        lcp_ms = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']['percentile']
-        lcp_sec = round(lcp_ms / 1000, 2)
+        metrics = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']
+        lcp_sec = round(metrics['percentile'] / 1000, 2)
         
-        # 判定状态
-        category = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']['category'] # FAST, AVERAGE, SLOW
         return {
             "url": url,
             "lcp": f"{lcp_sec}s",
             "lcp_val": lcp_sec,
-            "category": category,
+            "category": metrics['category'],
             "status": "Success"
         }
+    except requests.exceptions.Timeout:
+        return {"url": url, "status": "Error: 请求超时，Google API 响应太慢"}
     except Exception as e:
         return {"url": url, "status": f"Error: {str(e)}"}
 
