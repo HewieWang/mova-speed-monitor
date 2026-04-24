@@ -1,5 +1,5 @@
 import requests
-import os
+import os,time,json
 
 # 配置区 (从环境变量读取)
 GOOGLE_API_KEY = os.getenv("PSI_API_KEY")
@@ -14,25 +14,32 @@ CONFIG = {
 }
 
 def fetch_real_user_data(url):
-    api_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}&key={GOOGLE_API_KEY}&strategy=mobile"
-    try:
-        # 延长到 90 秒防止超时
-        response = requests.get(api_url, timeout=90).json()
-        field_data = response.get('loadingExperience', {})
-        
-        if not field_data or 'metrics' not in field_data:
-            return {"url": url, "status": "无真实用户数据"}
-
-        lcp_ms = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']['percentile']
-        lcp_sec = round(lcp_ms / 1000, 2)
-        category = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']['category']
-        
-        return {"url": url, "lcp": lcp_sec, "category": category, "status": "Success"}
-    except Exception as e:
-        return {"url": url, "status": "请求超时"}
+    # 尝试 2 次
+    for i in range(2):
+        try:
+            api_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}&key={GOOGLE_API_KEY}&strategy=mobile"
+            response = requests.get(api_url, timeout=120).json() # 增加到 120 秒
+            
+            field_data = response.get('loadingExperience', {})
+            if field_data and 'metrics' in field_data:
+                # 成功拿到了数据，直接返回
+                metrics = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']
+                return {
+                    "url": url, 
+                    "lcp": round(metrics['percentile'] / 1000, 2), 
+                    "category": metrics['category'], 
+                    "status": "Success"
+                }
+        except:
+            if i == 0: 
+                print(f"首次请求 {url} 超时，5秒后重试...")
+                time.sleep(5)
+            continue
+            
+    return {"url": url, "status": "请求超时"}
 
 def send_feishu_text(results):
-    # 构造纯文本内容（保持不变）
+    # 1. 构造纯文本
     report_lines = [
         "🚀 【MOVA 性能监控日报】",
         "--------------------------------"
@@ -40,8 +47,10 @@ def send_feishu_text(results):
     
     valid_results = sorted([r for r in results if 'lcp' in r], key=lambda x: x['lcp'], reverse=True)
     for r in valid_results:
-        icon = "🔴" if r['category'] == "SLOW" else "🟢"
-        report_lines.append(f"{icon} 项目: {r['name']}\n   LCP: {r['lcp']}s ({r['category']})\n   URL: {r['url']}\n")
+        icon = "🔴" if r['category'] == "SLOW" else "🟡" if r['category'] == "AVERAGE" else "🟢"
+        report_lines.append(f"{icon} 项目: {r['name']}")
+        report_lines.append(f"   LCP: {r['lcp']}s ({r['category']})")
+        report_lines.append(f"   URL: {r['url']}\n")
 
     errors = [r for r in results if 'lcp' not in r]
     if errors:
@@ -49,21 +58,30 @@ def send_feishu_text(results):
         for e in errors:
             report_lines.append(f"   - {e['name']}: {e['status']}")
 
-    # ================= 关键改动 =================
-    # 某些机器人只需要 text 字段，不需要嵌套在 content 里
     text_content = "\n".join(report_lines)
-    
-    # 尝试这种最简洁的发送方式
+
+    # 2. 针对“机器人助手”应用的特殊 Payload
+    # 应用类机器人有时需要将 content 转义为字符串
     payload = {
-        "text": text_content
+        "msg_type": "text",
+        "content": json.dumps({"text": text_content}) # 关键点：这里做二次转义
     }
-    
-    # 如果上面的不行，飞书标准的自定义机器人其实是这样的：
-    # payload = {"msg_type": "text", "content": {"text": text_content}}
-    # 但由于你那边一直返回源码，说明它没识别出 msg_type
-    
-    print(f"正在发送至飞书...")
-    requests.post(FEISHU_WEBHOOK, json=payload)
+
+    headers = {
+        "Content-Type": "application/json; charset=utf-8"
+    }
+
+    try:
+        response = requests.post(
+            FEISHU_WEBHOOK, 
+            data=json.dumps(payload), # 整体再序列化一次
+            headers=headers,
+            timeout=10
+        )
+        # 调试：在 GitHub Actions 日志里看这个输出
+        print(f"飞书返回: {response.text}") 
+    except Exception as e:
+        print(f"发送失败: {e}")
 
 def main():
     results = []
