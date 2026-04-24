@@ -73,19 +73,57 @@ def fetch_real_user_data(url):
     except Exception as e:
         return {"url": url, "status": f"Error: {str(e)}"}
 
-def send_feishu(msg_content):
+def send_feishu(results):
     if not CONFIG['notifications']['feishu']['enabled']: return
-    payload = {
-        "msg_type": "post",
-        "content": {
-            "post": {
-                "zh_cn": {
-                    "title": "📊 真实用户访问速度报告 (Field Data)",
-                    "content": [[{"tag": "text", "text": msg_content}]]
-                }
+    
+    # 按照 LCP 慢到快排序
+    valid_results = sorted([r for r in results if 'lcp_val' in r], key=lambda x: x['lcp_val'], reverse=True)
+    
+    # 构建卡片元素
+    elements = []
+    for r in valid_results:
+        # 根据状态选择表情和颜色
+        if r['category'] == "SLOW":
+            status_text = "🔴 SLOW (需要紧急优化)"
+            color = "red"
+        elif r['category'] == "AVERAGE":
+            status_text = "🟡 AVERAGE (待改进)"
+            color = "orange"
+        else:
+            status_text = "🟢 FAST (表现优秀)"
+            color = "green"
+            
+        elements.append({
+            "tag": "div",
+            "text": {
+                "tag": "lark_md",
+                "content": f"**项目: {r['name']}**\n**LCP: {r['lcp']}** | 状态: {status_text}\nURL: {r['url']}"
             }
+        })
+        elements.append({"tag": "hr"}) # 分隔线
+
+    # 错误处理
+    errors = [r for r in results if 'lcp_val' not in r]
+    if errors:
+        error_msg = "\n".join([f"⚠️ {e['name']}: {e['status']}" for e in errors])
+        elements.append({
+            "tag": "note",
+            "elements": [{"tag": "plain_text", "content": error_msg}]
+        })
+
+    # 飞书交互式卡片 JSON 结构
+    payload = {
+        "msg_type": "interactive",
+        "card": {
+            "config": {"enable_forward": True},
+            "header": {
+                "title": {"tag": "plain_text", "content": "🚀 Shopify 站点真实用户速度日报"},
+                "template": "blue" # 标题栏颜色
+            },
+            "elements": elements
         }
     }
+    
     requests.post(CONFIG['notifications']['feishu']['webhook_url'], json=payload)
 
 def send_email(msg_content):
