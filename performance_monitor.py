@@ -32,21 +32,16 @@ def fetch_real_user_data(url):
         return {"url": url, "status": "请求超时"}
 
 def send_feishu_text(results):
-    # 手动构造一个漂亮的纯文本报告
+    # 构造纯文本内容（保持不变）
     report_lines = [
         "🚀 【MOVA 性能监控日报】",
         "--------------------------------"
     ]
     
-    # 排序：慢的在前
     valid_results = sorted([r for r in results if 'lcp' in r], key=lambda x: x['lcp'], reverse=True)
-    
     for r in valid_results:
         icon = "🔴" if r['category'] == "SLOW" else "🟢"
-        report_lines.append(f"{icon} 项目: {r['name']}")
-        report_lines.append(f"   LCP: {r['lcp']}s ({r['category']})")
-        report_lines.append(f"   URL: {r['url']}")
-        report_lines.append("")
+        report_lines.append(f"{icon} 项目: {r['name']}\n   LCP: {r['lcp']}s ({r['category']})\n   URL: {r['url']}\n")
 
     errors = [r for r in results if 'lcp' not in r]
     if errors:
@@ -54,14 +49,20 @@ def send_feishu_text(results):
         for e in errors:
             report_lines.append(f"   - {e['name']}: {e['status']}")
 
-    # 构造飞书最基础的 text 类型消息
+    # ================= 关键改动 =================
+    # 某些机器人只需要 text 字段，不需要嵌套在 content 里
+    text_content = "\n".join(report_lines)
+    
+    # 尝试这种最简洁的发送方式
     payload = {
-        "msg_type": "text",
-        "content": {
-            "text": "\n".join(report_lines) # 将列表合并为带换行的长字符串
-        }
+        "text": text_content
     }
     
+    # 如果上面的不行，飞书标准的自定义机器人其实是这样的：
+    # payload = {"msg_type": "text", "content": {"text": text_content}}
+    # 但由于你那边一直返回源码，说明它没识别出 msg_type
+    
+    print(f"正在发送至飞书...")
     requests.post(FEISHU_WEBHOOK, json=payload)
 
 def main():
