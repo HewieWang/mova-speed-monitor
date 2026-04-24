@@ -76,13 +76,17 @@ def fetch_real_user_data(url):
 def send_feishu(results):
     if not CONFIG['notifications']['feishu']['enabled']: return
     
-    # 按照 LCP 慢到快排序
+    # 基础校验：如果传进来的是字符串，直接跳过卡片逻辑（防止报错）
+    if isinstance(results, str):
+        print("Error: send_feishu expects a list, but got a string.")
+        return
+
+    # 按 LCP 慢到快排序
     valid_results = sorted([r for r in results if 'lcp_val' in r], key=lambda x: x['lcp_val'], reverse=True)
     
-    # 构建卡片元素
     elements = []
     for r in valid_results:
-        # 根据状态选择表情和颜色
+        # 这里的 r 是个 dict，所以 r['category'] 不会再报错
         if r['category'] == "SLOW":
             status_text = "🔴 SLOW (需要紧急优化)"
             color = "red"
@@ -100,30 +104,28 @@ def send_feishu(results):
                 "content": f"**项目: {r['name']}**\n**LCP: {r['lcp']}** | 状态: {status_text}\nURL: {r['url']}"
             }
         })
-        elements.append({"tag": "hr"}) # 分隔线
+        elements.append({"tag": "hr"})
 
-    # 错误处理
+    # 这里的 errors 也是基于 dict 的循环
     errors = [r for r in results if 'lcp_val' not in r]
     if errors:
-        error_msg = "\n".join([f"⚠️ {e['name']}: {e['status']}" for e in errors])
+        error_msg = "\n".join([f"⚠️ {e.get('name', 'Unknown')}: {e.get('status', 'Error')}" for e in errors])
         elements.append({
             "tag": "note",
             "elements": [{"tag": "plain_text", "content": error_msg}]
         })
 
-    # 飞书交互式卡片 JSON 结构
     payload = {
         "msg_type": "interactive",
         "card": {
             "config": {"enable_forward": True},
             "header": {
                 "title": {"tag": "plain_text", "content": "🚀 Shopify 站点真实用户速度日报"},
-                "template": "blue" # 标题栏颜色
+                "template": "blue"
             },
             "elements": elements
         }
     }
-    
     requests.post(CONFIG['notifications']['feishu']['webhook_url'], json=payload)
 
 def send_email(msg_content):
@@ -150,26 +152,11 @@ def main():
         data['name'] = target['name']
         results.append(data)
     
-    # 构造报告文本
-    report = ""
-    # 按 LCP 慢到快排序
-    valid_results = sorted([r for r in results if 'lcp_val' in r], key=lambda x: x['lcp_val'], reverse=True)
-    
-    for r in valid_results:
-        icon = "🔴" if r['category'] == "SLOW" else "🟡" if r['category'] == "AVERAGE" else "🟢"
-        report += f"{icon} {r['name']}: LCP {r['lcp']} ({r['category']})\nURL: {r['url']}\n\n"
-    
-    # 错误处理展示
-    errors = [r for r in results if 'lcp_val' not in r]
-    if errors:
-        report += "⚠️ 以下页面暂无真实用户数据或报错：\n"
-        for e in errors:
-            report += f"- {e['name']}: {e['status']}\n"
-
-    # 执行发送
-    send_feishu(report)
-    send_email(report)
-    print("报告已发送。")
+    # 直接把原始 list 传给发送函数，不要提前转成 string
+    send_feishu(results)
+    # 如果你也开了 Email，建议保持简单的文本格式
+    # send_email(results) 
+    print("任务执行完毕。")
 
 if __name__ == "__main__":
     main()
