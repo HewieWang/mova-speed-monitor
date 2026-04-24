@@ -1,0 +1,30 @@
+name: Shopify Speed Daily Report
+
+on:
+  schedule:
+    # 这里的 cron 表达式代表每天北京时间早上 9 点运行 (UTC 1:00)
+    - cron: '0 1 * * *'
+  workflow_dispatch: # 这个选项让你可以在后台手动点按钮测试运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Speed Monitor
+        env:
+          # 将刚才配置的 Secrets 映射给脚本
+          PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+        run: python performance_monitor.py
