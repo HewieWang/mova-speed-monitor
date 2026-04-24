@@ -1,7 +1,9 @@
 import requests
-import os,time,json
+import os
+import time
+import json
 
-# 配置区 (从环境变量读取)
+# 配置区 (建议继续使用环境变量)
 GOOGLE_API_KEY = os.getenv("PSI_API_KEY")
 FEISHU_WEBHOOK = os.getenv("FEISHU_WEBHOOK")
 
@@ -14,15 +16,18 @@ CONFIG = {
 }
 
 def fetch_real_user_data(url):
-    # 尝试 2 次
-    for i in range(2):
+    """抓取 PSI 数据，增强了错误处理"""
+    api_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}&key={GOOGLE_API_KEY}&strategy=mobile"
+    
+    for i in range(2): # 尝试 2 次
         try:
-            api_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}&key={GOOGLE_API_KEY}&strategy=mobile"
-            response = requests.get(api_url, timeout=120).json() # 增加到 120 秒
+            response = requests.get(api_url, timeout=120)
+            response.raise_for_status() # 检查 HTTP 状态码
+            data = response.json()
             
-            field_data = response.get('loadingExperience', {})
+            # 提取真实用户体验数据 (CrUX)
+            field_data = data.get('loadingExperience', {})
             if field_data and 'metrics' in field_data:
-                # 成功拿到了数据，直接返回
                 metrics = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']
                 return {
                     "url": url, 
@@ -30,67 +35,84 @@ def fetch_real_user_data(url):
                     "category": metrics['category'], 
                     "status": "Success"
                 }
-        except:
-            if i == 0: 
+            else:
+                return {"url": url, "status": "暂无真实用户数据", "lcp": None}
+                
+        except requests.exceptions.Timeout:
+            if i == 0:
                 print(f"首次请求 {url} 超时，5秒后重试...")
                 time.sleep(5)
-            continue
+                continue
+            return {"url": url, "status": "请求超时", "lcp": None}
+        except Exception as e:
+            # 捕获其他异常（如接口改版或 API Key 失效），返回简洁提示
+            return {"url": url, "status": f"接口异常: {str(e)[:20]}", "lcp": None}
             
-    return {"url": url, "status": "请求超时"}
+    return {"url": url, "status": "请求失败", "lcp": None}
 
-def send_feishu_text(results):
-    # 1. 构造纯文本
-    report_lines = [
-        "🚀 【MOVA 性能监控日报】",
-        "--------------------------------"
-    ]
+def build_card_payload(results):
+    """构造飞书交互式卡片 JSON"""
     
-    valid_results = sorted([r for r in results if 'lcp' in r], key=lambda x: x['lcp'], reverse=True)
-    for r in valid_results:
-        icon = "🔴" if r['category'] == "SLOW" else "🟡" if r['category'] == "AVERAGE" else "🟢"
-        report_lines.append(f"{icon} 项目: {r['name']}")
-        report_lines.append(f"   LCP: {r['lcp']}s ({r['category']})")
-        report_lines.append(f"   URL: {r['url']}\n")
+    # 统计是否有页面状态不佳
+    any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))
+    header_color = "red" if any_slow else "blue"
+    
+    # 构建数据列表行
+    elements = []
+    for r in results:
+        if r['lcp']:
+            icon = "🔴" if r['category'] == "SLOW" else "🟡" if r['category'] == "AVERAGE" else "🟢"
+            status_text = f"**{r['lcp']}s** ({r['category']})"
+        else:
+            icon = "⚪"
+            status_text = f"*{r['status']}*"
+            
+        elements.append({
+            "tag": "div",
+            "text": {
+                "tag": "lark_md",
+                "content": f"{icon} **{r['name']}**\n指标: {status_text}\n链接: [点击访问]({r['url']})"
+            }
+        })
+        elements.append({"tag": "hr"}) # 添加分割线
 
-    errors = [r for r in results if 'lcp' not in r]
-    if errors:
-        report_lines.append("⚠️ 以下页面检测失败:")
-        for e in errors:
-            report_lines.append(f"   - {e['name']}: {e['status']}")
+    # 结尾备注
+    elements.append({
+        "tag": "note",
+        "elements": [{"tag": "plain_text", "content": f"统计时间: {time.strftime('%Y-%m-%d %H:%M:%S')}"}]
+    })
 
-    text_content = "\n".join(report_lines)
-
-    # 2. 针对“机器人助手”应用的特殊 Payload
-    # 应用类机器人有时需要将 content 转义为字符串
-    payload = {
-        "msg_type": "text",
-        "content": json.dumps({"text": text_content}) # 关键点：这里做二次转义
+    return {
+        "msg_type": "interactive",
+        "card": {
+            "header": {
+                "template": header_color,
+                "title": {"content": "🚀 MOVA 性能监控日报", "tag": "plain_text"}
+            },
+            "elements": elements
+        }
     }
 
-    headers = {
-        "Content-Type": "application/json; charset=utf-8"
-    }
-
+def send_to_feishu(payload):
+    """发送请求"""
+    headers = {"Content-Type": "application/json; charset=utf-8"}
     try:
-        response = requests.post(
-            FEISHU_WEBHOOK, 
-            data=json.dumps(payload), # 整体再序列化一次
-            headers=headers,
-            timeout=10
-        )
-        # 调试：在 GitHub Actions 日志里看这个输出
-        print(f"飞书返回: {response.text}") 
+        response = requests.post(FEISHU_WEBHOOK, data=json.dumps(payload), headers=headers, timeout=10)
+        print(f"飞书推送状态: {response.status_code}, 返回: {response.text}")
     except Exception as e:
-        print(f"发送失败: {e}")
+        print(f"网络层错误: {e}")
 
 def main():
+    print("开始执行性能监测...")
     results = []
     for target in CONFIG['targets']:
+        print(f"正在分析: {target['name']}...")
         data = fetch_real_user_data(target['url'])
         data['name'] = target['name']
         results.append(data)
     
-    send_feishu_text(results)
+    payload = build_card_payload(results)
+    send_to_feishu(payload)
 
 if __name__ == "__main__":
     main()
