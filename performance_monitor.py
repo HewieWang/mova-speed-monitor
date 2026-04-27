@@ -3,9 +3,10 @@ import os
 import time
 import json
 
-# 配置区 (建议继续使用环境变量)
+# 配置区
 GOOGLE_API_KEY = os.getenv("PSI_API_KEY")
 FEISHU_WEBHOOK = os.getenv("FEISHU_WEBHOOK")
+CACHE_FILE = "last_results.json" # 缓存文件名
 
 CONFIG = {
     "targets": [
@@ -15,54 +16,75 @@ CONFIG = {
     ]
 }
 
-def fetch_real_user_data(url):
-    """抓取 PSI 数据，增强了错误处理"""
+def load_cache():
+    """读取上一次的运行结果"""
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            return {}
+    return {}
+
+def save_cache(results):
+    """保存本次成功的结果到缓存"""
+    cache_data = {}
+    for r in results:
+        # 只有真正获取到 LCP 的才存入缓存
+        if r.get('status') == "Success" and r.get('lcp'):
+            cache_data[r['url']] = r
+            
+    if cache_data:
+        # 合并旧缓存，确保这次没跑成功的 URL 还能保留上上次的数据
+        old_cache = load_cache()
+        old_cache.update(cache_data)
+        with open(CACHE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(old_cache, f, ensure_ascii=False, indent=2)
+
+def fetch_real_user_data(url, cache):
+    """抓取数据，失败则回退到 cache"""
     api_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}&key={GOOGLE_API_KEY}&strategy=mobile"
     
-    for i in range(2): # 尝试 2 次
-        try:
-            response = requests.get(api_url, timeout=120)
-            response.raise_for_status() # 检查 HTTP 状态码
+    result = None
+    try:
+        response = requests.get(api_url, timeout=120)
+        if response.status_code == 200:
             data = response.json()
-            
-            # 提取真实用户体验数据 (CrUX)
             field_data = data.get('loadingExperience', {})
             if field_data and 'metrics' in field_data:
                 metrics = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']
-                return {
+                result = {
                     "url": url, 
                     "lcp": round(metrics['percentile'] / 1000, 2), 
                     "category": metrics['category'], 
-                    "status": "Success"
+                    "status": "Success",
+                    "is_cache": False
                 }
-            else:
-                return {"url": url, "status": "暂无真实用户数据", "lcp": None}
-                
-        except requests.exceptions.Timeout:
-            if i == 0:
-                print(f"首次请求 {url} 超时，5秒后重试...")
-                time.sleep(5)
-                continue
-            return {"url": url, "status": "请求超时", "lcp": None}
-        except Exception as e:
-            # 捕获其他异常（如接口改版或 API Key 失效），返回简洁提示
-            return {"url": url, "status": f"接口异常: {str(e)[:20]}", "lcp": None}
+    except Exception as e:
+        print(f"请求 {url} 异常: {str(e)[:30]}")
+
+    # 如果请求失败或没数据，尝试使用缓存
+    if not result:
+        if url in cache:
+            result = cache[url].copy()
+            result["is_cache"] = True # 标记这是缓存数据
+            result["status"] = "Success (来自历史)"
+        else:
+            result = {"url": url, "status": "请求失败且无缓存", "lcp": None, "is_cache": False}
             
-    return {"url": url, "status": "请求失败", "lcp": None}
+    return result
 
 def build_card_payload(results):
-    """构造飞书交互式卡片 JSON"""
-    
-    # 统计是否有页面状态不佳
+    """构造飞书卡片"""
     any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))
     header_color = "red" if any_slow else "blue"
     
-    # 构建数据列表行
     elements = []
     for r in results:
         if r['lcp']:
             icon = "🔴" if r['category'] == "SLOW" else "🟡" if r['category'] == "AVERAGE" else "🟢"
-            status_text = f"**{r['lcp']}s** ({r['category']})"
+            cache_tag = " ⚠️(历史数据)" if r.get('is_cache') else ""
+            status_text = f"**{r['lcp']}s** ({r['category']}){cache_tag}"
         else:
             icon = "⚪"
             status_text = f"*{r['status']}*"
@@ -74,9 +96,8 @@ def build_card_payload(results):
                 "content": f"{icon} **{r['name']}**\n指标: {status_text}\n链接: [点击访问]({r['url']})"
             }
         })
-        elements.append({"tag": "hr"}) # 添加分割线
+        elements.append({"tag": "hr"})
 
-    # 结尾备注
     elements.append({
         "tag": "note",
         "elements": [{"tag": "plain_text", "content": f"统计时间: {time.strftime('%Y-%m-%d %H:%M:%S')}"}]
@@ -94,23 +115,21 @@ def build_card_payload(results):
     }
 
 def send_to_feishu(payload):
-    """发送请求"""
     headers = {"Content-Type": "application/json; charset=utf-8"}
     try:
-        response = requests.post(FEISHU_WEBHOOK, data=json.dumps(payload), headers=headers, timeout=10)
-        print(f"飞书推送状态: {response.status_code}, 返回: {response.text}")
-    except Exception as e:
-        print(f"网络层错误: {e}")
+        requests.post(FEISHU_WEBHOOK, data=json.dumps(payload), headers=headers, timeout=10)
+    except:
+        pass
 
 def main():
-    print("开始执行性能监测...")
+    cache = load_cache()
     results = []
     for target in CONFIG['targets']:
-        print(f"正在分析: {target['name']}...")
-        data = fetch_real_user_data(target['url'])
+        data = fetch_real_user_data(target['url'], cache)
         data['name'] = target['name']
         results.append(data)
     
+    save_cache(results) # 保存最新的成功数据
     payload = build_card_payload(results)
     send_to_feishu(payload)
 
