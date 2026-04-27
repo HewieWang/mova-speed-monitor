@@ -1,15 +1,16 @@
-name: Shopify Speed Daily Report
+name: Performance Monitor
 
 on:
   schedule:
-    # 这里的 cron 表达式代表每天北京时间早上 9 点运行 (UTC 1:00)
-    - cron: '0 1 * * *'
-  workflow_dispatch: # 这个选项让你可以在后台手动点按钮测试运行
+    - cron: '0 1 * * *' # 每天运行
+  workflow_dispatch:
+
+permissions:
+  contents: write # 必须赋予写权限以更新缓存文件
 
 jobs:
-  build:
+  monitor:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,9 +23,16 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Run Speed Monitor
+      - name: Run script
         env:
-          # 将刚才配置的 Secrets 映射给脚本
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
-        run: python performance_monitor.py
+        run: python your_script_name.py
+
+      - name: Commit and push cache
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add last_results.json
+          git commit -m "Update performance cache" || echo "No changes to commit"
+          git push
