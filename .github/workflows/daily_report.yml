@@ -27,7 +27,7 @@ jobs:
         env:
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
-        run: python your_script_name.py
+        run: python performance_monitor.py
 
       - name: Commit and push cache
         run: |
