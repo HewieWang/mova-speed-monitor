@@ -11,7 +11,14 @@ CACHE_FILE = "last_results.json" # 缓存文件名
 CONFIG = {
     "targets": [
         {"name": "US-Home", "url": "https://us.mova.tech/"},
-        {"name": "US-Product", "url": "https://us.mova.tech/products/mova-lidax-ultra-3000-awd-robotic-lawn-mower"},
+        {"name": "US-EasterEgg", "url": "https://us.mova.tech/pages/easter-egg-hunt"},
+        {"name": "CA-EasterEgg", "url": "https://ca.mova.tech/pages/easter-egg-hunt"},
+        {"name": "US-GroupBuy", "url": "https://us.mova.tech/pages/group-buying"},
+        {"name": "CA-GroupBuy", "url": "https://ca.mova.tech/pages/group-buying"},
+        {"name": "US-BestOffer", "url": "https://us.mova.tech/pages/deals"},
+        {"name": "CA-BestOffer", "url": "https://ca.mova.tech/pages/deals"},
+        {"name": "US-Blog", "url": "https://us.mova.tech/blogs/cleaning-tips"},
+        {"name": "CA-Blog", "url": "https://ca.mova.tech/blogs/cleaning-tips"},
         {"name": "CA-Home", "url": "https://ca.mova.tech/"}
     ]
 }
