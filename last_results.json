@@ -1,0 +1,58 @@
+{
+  "https://us.mova.tech/pages/easter-egg-hunt": {
+    "url": "https://us.mova.tech/pages/easter-egg-hunt",
+    "lcp": 2.0,
+    "category": "FAST",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-EasterEgg"
+  },
+  "https://ca.mova.tech/pages/easter-egg-hunt": {
+    "url": "https://ca.mova.tech/pages/easter-egg-hunt",
+    "lcp": 2.6,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-EasterEgg"
+  },
+  "https://us.mova.tech/pages/group-buying": {
+    "url": "https://us.mova.tech/pages/group-buying",
+    "lcp": 3.64,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-GroupBuy"
+  },
+  "https://ca.mova.tech/pages/group-buying": {
+    "url": "https://ca.mova.tech/pages/group-buying",
+    "lcp": 2.6,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-GroupBuy"
+  },
+  "https://us.mova.tech/blogs/cleaning-tips": {
+    "url": "https://us.mova.tech/blogs/cleaning-tips",
+    "lcp": 3.64,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-Blog"
+  },
+  "https://ca.mova.tech/blogs/cleaning-tips": {
+    "url": "https://ca.mova.tech/blogs/cleaning-tips",
+    "lcp": 2.6,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-Blog"
+  },
+  "https://ca.mova.tech/": {
+    "url": "https://ca.mova.tech/",
+    "lcp": 2.22,
+    "category": "FAST",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-Home"
+  }
+}
