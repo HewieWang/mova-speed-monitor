@@ -54,5 +54,21 @@
     "status": "Success",
     "is_cache": false,
     "name": "CA-Home"
+  },
+  "https://us.mova.tech/": {
+    "url": "https://us.mova.tech/",
+    "lcp": 2.2,
+    "category": "FAST",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-Home"
+  },
+  "https://ca.mova.tech/pages/deals": {
+    "url": "https://ca.mova.tech/pages/deals",
+    "lcp": 2.0,
+    "category": "FAST",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-BestOffer"
   }
 }
