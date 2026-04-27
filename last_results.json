@@ -70,5 +70,13 @@
     "status": "Success",
     "is_cache": false,
     "name": "CA-BestOffer"
+  },
+  "https://us.mova.tech/pages/deals": {
+    "url": "https://us.mova.tech/pages/deals",
+    "lcp": 1.96,
+    "category": "FAST",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-BestOffer"
   }
 }
