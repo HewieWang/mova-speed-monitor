@@ -78,5 +78,21 @@
     "status": "Success",
     "is_cache": false,
     "name": "US-BestOffer"
+  },
+  "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
+    "url": "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum",
+    "lcp": 2.96,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-V50"
+  },
+  "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner": {
+    "url": "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner",
+    "lcp": 2.67,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-X10"
   }
 }
