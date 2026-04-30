@@ -57,7 +57,7 @@
   },
   "https://us.mova.tech/": {
     "url": "https://us.mova.tech/",
-    "lcp": 2.21,
+    "lcp": 2.23,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -81,7 +81,7 @@
   },
   "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
     "url": "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum",
-    "lcp": 2.96,
+    "lcp": 2.97,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -102,5 +102,21 @@
     "status": "Success",
     "is_cache": false,
     "name": "US-1000"
+  },
+  "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
+    "url": "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum",
+    "lcp": 4.07,
+    "category": "SLOW",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-V50"
+  },
+  "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
+    "url": "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
+    "lcp": 3.26,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-1000"
   }
 }
