@@ -49,7 +49,7 @@
   },
   "https://ca.mova.tech/": {
     "url": "https://ca.mova.tech/",
-    "lcp": 2.22,
+    "lcp": 2.26,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
