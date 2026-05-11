@@ -1,7 +1,7 @@
 {
   "https://us.mova.tech/pages/easter-egg-hunt": {
     "url": "https://us.mova.tech/pages/easter-egg-hunt",
-    "lcp": 2.16,
+    "lcp": 2.17,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -113,7 +113,7 @@
   },
   "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
     "url": "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
-    "lcp": 3.17,
+    "lcp": 3.12,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
