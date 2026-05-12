@@ -57,7 +57,7 @@
   },
   "https://us.mova.tech/": {
     "url": "https://us.mova.tech/",
-    "lcp": 2.28,
+    "lcp": 2.31,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -105,7 +105,7 @@
   },
   "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
     "url": "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum",
-    "lcp": 4.16,
+    "lcp": 4.15,
     "category": "SLOW",
     "status": "Success",
     "is_cache": false,
