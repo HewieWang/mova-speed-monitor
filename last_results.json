@@ -57,7 +57,7 @@
   },
   "https://us.mova.tech/": {
     "url": "https://us.mova.tech/",
-    "lcp": 2.31,
+    "lcp": 2.39,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -73,7 +73,7 @@
   },
   "https://us.mova.tech/pages/deals": {
     "url": "https://us.mova.tech/pages/deals",
-    "lcp": 1.85,
+    "lcp": 1.91,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
