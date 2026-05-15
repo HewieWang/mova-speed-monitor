@@ -9,7 +9,7 @@
   },
   "https://ca.mova.tech/pages/easter-egg-hunt": {
     "url": "https://ca.mova.tech/pages/easter-egg-hunt",
-    "lcp": 2.76,
+    "lcp": 2.75,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -25,7 +25,7 @@
   },
   "https://ca.mova.tech/pages/group-buying": {
     "url": "https://ca.mova.tech/pages/group-buying",
-    "lcp": 2.76,
+    "lcp": 2.75,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -41,7 +41,7 @@
   },
   "https://ca.mova.tech/blogs/cleaning-tips": {
     "url": "https://ca.mova.tech/blogs/cleaning-tips",
-    "lcp": 2.76,
+    "lcp": 2.75,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -81,7 +81,7 @@
   },
   "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
     "url": "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum",
-    "lcp": 2.97,
+    "lcp": 3.02,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -89,7 +89,7 @@
   },
   "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner": {
     "url": "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner",
-    "lcp": 2.76,
+    "lcp": 2.75,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
