@@ -17,7 +17,7 @@
   },
   "https://us.mova.tech/pages/group-buying": {
     "url": "https://us.mova.tech/pages/group-buying",
-    "lcp": 3.87,
+    "lcp": 3.85,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -33,7 +33,7 @@
   },
   "https://us.mova.tech/blogs/cleaning-tips": {
     "url": "https://us.mova.tech/blogs/cleaning-tips",
-    "lcp": 3.87,
+    "lcp": 3.85,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -57,7 +57,7 @@
   },
   "https://us.mova.tech/": {
     "url": "https://us.mova.tech/",
-    "lcp": 2.39,
+    "lcp": 2.43,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -65,7 +65,7 @@
   },
   "https://ca.mova.tech/pages/deals": {
     "url": "https://ca.mova.tech/pages/deals",
-    "lcp": 2.12,
+    "lcp": 2.13,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -73,7 +73,7 @@
   },
   "https://us.mova.tech/pages/deals": {
     "url": "https://us.mova.tech/pages/deals",
-    "lcp": 1.91,
+    "lcp": 1.9,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
