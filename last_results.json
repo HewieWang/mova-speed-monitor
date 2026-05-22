@@ -1,7 +1,7 @@
 {
   "https://us.mova.tech/pages/easter-egg-hunt": {
     "url": "https://us.mova.tech/pages/easter-egg-hunt",
-    "lcp": 2.12,
+    "lcp": 2.13,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -9,7 +9,7 @@
   },
   "https://ca.mova.tech/pages/easter-egg-hunt": {
     "url": "https://ca.mova.tech/pages/easter-egg-hunt",
-    "lcp": 2.71,
+    "lcp": 2.72,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -17,7 +17,7 @@
   },
   "https://us.mova.tech/pages/group-buying": {
     "url": "https://us.mova.tech/pages/group-buying",
-    "lcp": 3.77,
+    "lcp": 3.75,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -33,7 +33,7 @@
   },
   "https://us.mova.tech/blogs/cleaning-tips": {
     "url": "https://us.mova.tech/blogs/cleaning-tips",
-    "lcp": 3.77,
+    "lcp": 3.75,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -49,7 +49,7 @@
   },
   "https://ca.mova.tech/": {
     "url": "https://ca.mova.tech/",
-    "lcp": 2.2,
+    "lcp": 2.17,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -57,15 +57,15 @@
   },
   "https://us.mova.tech/": {
     "url": "https://us.mova.tech/",
-    "lcp": 2.46,
-    "category": "FAST",
+    "lcp": 2.5,
+    "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
     "name": "US-Home"
   },
   "https://ca.mova.tech/pages/deals": {
     "url": "https://ca.mova.tech/pages/deals",
-    "lcp": 2.13,
+    "lcp": 2.1,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -73,7 +73,7 @@
   },
   "https://us.mova.tech/pages/deals": {
     "url": "https://us.mova.tech/pages/deals",
-    "lcp": 1.96,
+    "lcp": 1.93,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -89,7 +89,7 @@
   },
   "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner": {
     "url": "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner",
-    "lcp": 2.71,
+    "lcp": 2.72,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -113,7 +113,7 @@
   },
   "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
     "url": "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
-    "lcp": 3.11,
+    "lcp": 3.39,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
