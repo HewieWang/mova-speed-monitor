@@ -23,10 +23,8 @@ CONFIG = {
         {"name": "US-Blog", "url": "https://us.mova.tech/blogs/cleaning-tips"},
         {"name": "CA-Blog", "url": "https://ca.mova.tech/blogs/cleaning-tips"},
         {"name": "CA-Home", "url": "https://ca.mova.tech/"},
-        {"name": "US-V50", "url": "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum"},
         {"name": "US-X10", "url": "https://us.mova.tech/products/mova-rover-x10-robotic-pool-cleaner"},
         {"name": "US-1000", "url": "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower"},
-        {"name": "CA-V50", "url": "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum"},
         {"name": "CA-X10", "url": "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner"},
         {"name": "CA-1000", "url": "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower"}
     ]
