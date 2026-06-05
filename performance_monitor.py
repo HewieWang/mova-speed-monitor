@@ -5,8 +5,11 @@ import json
 
 # 配置区
 GOOGLE_API_KEY = os.getenv("PSI_API_KEY")
-FEISHU_WEBHOOK = os.getenv("FEISHU_WEBHOOK")
-CACHE_FILE = "last_results.json" # 缓存文件名
+CACHE_FILE = "last_results.json"  # 缓存文件名
+
+# 新增：从 GitHub Actions 环境中获取的变量
+GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY") # 格式如 "owner/repo"
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 CONFIG = {
     "targets": [
@@ -43,12 +46,10 @@ def save_cache(results):
     """保存本次成功的结果到缓存"""
     cache_data = {}
     for r in results:
-        # 只有真正获取到 LCP 的才存入缓存
         if r.get('status') == "Success" and r.get('lcp'):
             cache_data[r['url']] = r
             
     if cache_data:
-        # 合并旧缓存，确保这次没跑成功的 URL 还能保留上上次的数据
         old_cache = load_cache()
         old_cache.update(cache_data)
         with open(CACHE_FILE, 'w', encoding='utf-8') as f:
@@ -76,63 +77,71 @@ def fetch_real_user_data(url, cache):
     except Exception as e:
         print(f"请求 {url} 异常: {str(e)[:30]}")
 
-    # 如果请求失败或没数据，尝试使用缓存
     if not result:
         if url in cache:
             result = cache[url].copy()
-            result["is_cache"] = True # 标记这是缓存数据
+            result["is_cache"] = True
             result["status"] = "Success (来自历史)"
         else:
             result = {"url": url, "status": "请求失败且无缓存", "lcp": None, "is_cache": False}
             
     return result
 
-def build_card_payload(results):
-    """构造飞书卡片"""
+def build_markdown_body(results):
+    """构造适合 GitHub Issues 展示的 Markdown 内容"""
     any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))
-    header_color = "red" if any_slow else "blue"
     
-    elements = []
+    # 状态概览横幅
+    status_summary = "🚨 **检测到部分页面加载缓慢，请注意优化！**" if any_slow else "✅ **所有页面性能表现良好。**"
+    
+    markdown = f"### 📊 性能监控结果概览\n{status_summary}\n\n"
+    markdown += "| 页面名称 | LCP 指标 | 状态分类 | 访问链接 |\n"
+    markdown += "| :--- | :--- | :--- | :--- |\n"
+    
     for r in results:
         if r['lcp']:
             icon = "🔴" if r['category'] == "SLOW" else "🟡" if r['category'] == "AVERAGE" else "🟢"
             cache_tag = " ⚠️(历史数据)" if r.get('is_cache') else ""
-            status_text = f"**{r['lcp']}s** ({r['category']}){cache_tag}"
+            lcp_text = f"**{r['lcp']}s**"
+            category_text = f"{icon} {r['category']}{cache_tag}"
         else:
-            icon = "⚪"
-            status_text = f"*{r['status']}*"
+            lcp_text = "`-`"
+            category_text = f"⚪ *{r['status']}*"
             
-        elements.append({
-            "tag": "div",
-            "text": {
-                "tag": "lark_md",
-                "content": f"{icon} **{r['name']}**\n指标: {status_text}\n链接: [点击访问]({r['url']})"
-            }
-        })
-        elements.append({"tag": "hr"})
+        markdown += f"| **{r['name']}** | {lcp_text} | {category_text} | [点击访问]({r['url']}) |\n"
+        
+    markdown += f"\n---\n*统计时间: {time.strftime('%Y-%m-%d %H:%M:%S')} (UTC)*"
+    return markdown
 
-    elements.append({
-        "tag": "note",
-        "elements": [{"tag": "plain_text", "content": f"统计时间: {time.strftime('%Y-%m-%d %H:%M:%S')}"}]
-    })
+def create_github_issue(body):
+    """调用 GitHub API 创建 Issue"""
+    if not GITHUB_REPOSITORY or not GITHUB_TOKEN:
+        print("缺少 GITHUB_REPOSITORY 或 GITHUB_TOKEN 环境变量，跳过 Issue 创建")
+        return
 
-    return {
-        "msg_type": "interactive",
-        "card": {
-            "header": {
-                "template": header_color,
-                "title": {"content": "🚀 MOVA 性能监控日报", "tag": "plain_text"}
-            },
-            "elements": elements
-        }
+    url = f"https://api.github.com/repos/{GITHUB_REPOSITORY}/issues"
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
     }
-
-def send_to_feishu(payload):
-    headers = {"Content-Type": "application/json; charset=utf-8"}
+    
+    # 标题带上当前日期
+    title = f"🚀 MOVA 性能监控日报 - {time.strftime('%Y-%m-%d')}"
+    
+    payload = {
+        "title": title,
+        "body": body,
+        "labels": ["performance-report"] # 自动加上标签，方便外部人过滤筛选
+    }
+    
     try:
-        requests.post(FEISHU_WEBHOOK, data=json.dumps(payload), headers=headers, timeout=10)
-    except:
-        pass
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        if response.status_code == 201:
+            print("GitHub Issue 创建成功！")
+        else:
+            print(f"创建 Issue 失败，状态码: {response.status_code}, 返回: {response.text}")
+    except Exception as e:
+        print(f"发送 GitHub API 请求异常: {str(e)}")
 
 def main():
     cache = load_cache()
@@ -143,8 +152,10 @@ def main():
         results.append(data)
     
     save_cache(results) # 保存最新的成功数据
-    payload = build_card_payload(results)
-    send_to_feishu(payload)
+    
+    # 生成 Markdown 报告并发布到 GitHub Issues
+    md_body = build_markdown_body(results)
+    create_github_issue(md_body)
 
 if __name__ == "__main__":
     main()
