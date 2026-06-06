@@ -26,7 +26,19 @@ CONFIG = {
         {"name": "US-X10", "url": "https://us.mova.tech/products/mova-rover-x10-robotic-pool-cleaner"},
         {"name": "US-1000", "url": "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower"},
         {"name": "CA-X10", "url": "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner"},
-        {"name": "CA-1000", "url": "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower"}
+        {"name": "CA-1000", "url": "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower"},
+        {"name": "US-V50", "url": "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum"},
+        {"name": "US-Z60", "url": "https://us.mova.tech/products/mova-z60-ultra-roller-complete"},
+        {"name": "US-Mobius", "url": "https://us.mova.tech/products/mova-mobius-60-robot-vacuum"},
+        {"name": "US-P10PU", "url": "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum"},
+        {"name": "US-X4Pro", "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-x4-pro"},
+        {"name": "US-M10", "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-m10"},
+        {"name": "CA-V50", "url": "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum"},
+        {"name": "CA-Z60", "url": "https://ca.mova.tech/products/mova-z60-ultra-roller-complete"},
+        {"name": "CA-Mobius", "url": "https://ca.mova.tech/products/mova-mobius-60-robot-vacuum"},
+        {"name": "CA-P10PU", "url": "https://ca.mova.tech/products/p10-pro-ultra-robot-vacuum"},
+        {"name": "CA-X4Pro", "url": "https://ca.mova.tech/products/mova-wet-dry-vacuum-x4-pro"},
+        {"name": "CA-M10", "url": "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10"}
     ]
 }
 
