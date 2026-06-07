@@ -97,7 +97,7 @@
   },
   "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
     "url": "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
-    "lcp": 3.23,
+    "lcp": 3.53,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -126,5 +126,37 @@
     "status": "Success",
     "is_cache": false,
     "name": "US-X10"
+  },
+  "https://us.mova.tech/products/mova-mobius-60-robot-vacuum": {
+    "url": "https://us.mova.tech/products/mova-mobius-60-robot-vacuum",
+    "lcp": 2.66,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-Mobius"
+  },
+  "https://us.mova.tech/products/mova-wet-dry-vacuum-x4-pro": {
+    "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-x4-pro",
+    "lcp": 3.53,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-X4Pro"
+  },
+  "https://ca.mova.tech/products/mova-mobius-60-robot-vacuum": {
+    "url": "https://ca.mova.tech/products/mova-mobius-60-robot-vacuum",
+    "lcp": 2.47,
+    "category": "FAST",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-Mobius"
+  },
+  "https://ca.mova.tech/products/mova-wet-dry-vacuum-x4-pro": {
+    "url": "https://ca.mova.tech/products/mova-wet-dry-vacuum-x4-pro",
+    "lcp": 2.58,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-X4Pro"
   }
 }
