@@ -158,5 +158,45 @@
     "status": "Success",
     "is_cache": false,
     "name": "CA-X4Pro"
+  },
+  "https://us.mova.tech/products/mova-z60-ultra-roller-complete": {
+    "url": "https://us.mova.tech/products/mova-z60-ultra-roller-complete",
+    "lcp": 3.92,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-Z60"
+  },
+  "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum": {
+    "url": "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum",
+    "lcp": 2.46,
+    "category": "FAST",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-P10PU"
+  },
+  "https://us.mova.tech/products/mova-wet-dry-vacuum-m10": {
+    "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-m10",
+    "lcp": 3.53,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "US-M10"
+  },
+  "https://ca.mova.tech/products/mova-z60-ultra-roller-complete": {
+    "url": "https://ca.mova.tech/products/mova-z60-ultra-roller-complete",
+    "lcp": 2.68,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-Z60"
+  },
+  "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10": {
+    "url": "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10",
+    "lcp": 2.58,
+    "category": "AVERAGE",
+    "status": "Success",
+    "is_cache": false,
+    "name": "CA-M10"
   }
 }
