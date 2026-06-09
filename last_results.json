@@ -17,7 +17,7 @@
   },
   "https://us.mova.tech/pages/group-buying": {
     "url": "https://us.mova.tech/pages/group-buying",
-    "lcp": 3.53,
+    "lcp": 3.66,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -25,7 +25,7 @@
   },
   "https://ca.mova.tech/pages/group-buying": {
     "url": "https://ca.mova.tech/pages/group-buying",
-    "lcp": 2.58,
+    "lcp": 2.6,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -33,7 +33,7 @@
   },
   "https://us.mova.tech/blogs/cleaning-tips": {
     "url": "https://us.mova.tech/blogs/cleaning-tips",
-    "lcp": 3.53,
+    "lcp": 3.66,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -41,7 +41,7 @@
   },
   "https://ca.mova.tech/blogs/cleaning-tips": {
     "url": "https://ca.mova.tech/blogs/cleaning-tips",
-    "lcp": 2.58,
+    "lcp": 2.6,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -57,15 +57,15 @@
   },
   "https://us.mova.tech/": {
     "url": "https://us.mova.tech/",
-    "lcp": 2.54,
-    "category": "AVERAGE",
+    "lcp": 2.44,
+    "category": "FAST",
     "status": "Success",
     "is_cache": false,
     "name": "US-Home"
   },
   "https://ca.mova.tech/pages/deals": {
     "url": "https://ca.mova.tech/pages/deals",
-    "lcp": 2.11,
+    "lcp": 2.09,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -145,15 +145,15 @@
   },
   "https://ca.mova.tech/products/mova-mobius-60-robot-vacuum": {
     "url": "https://ca.mova.tech/products/mova-mobius-60-robot-vacuum",
-    "lcp": 2.47,
-    "category": "FAST",
+    "lcp": 2.53,
+    "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
     "name": "CA-Mobius"
   },
   "https://ca.mova.tech/products/mova-wet-dry-vacuum-x4-pro": {
     "url": "https://ca.mova.tech/products/mova-wet-dry-vacuum-x4-pro",
-    "lcp": 2.58,
+    "lcp": 2.6,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -161,7 +161,7 @@
   },
   "https://us.mova.tech/products/mova-z60-ultra-roller-complete": {
     "url": "https://us.mova.tech/products/mova-z60-ultra-roller-complete",
-    "lcp": 3.92,
+    "lcp": 3.67,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -169,15 +169,15 @@
   },
   "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum": {
     "url": "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum",
-    "lcp": 2.46,
-    "category": "FAST",
+    "lcp": 3.19,
+    "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
     "name": "US-P10PU"
   },
   "https://us.mova.tech/products/mova-wet-dry-vacuum-m10": {
     "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-m10",
-    "lcp": 3.53,
+    "lcp": 3.66,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -193,7 +193,7 @@
   },
   "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10": {
     "url": "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10",
-    "lcp": 2.58,
+    "lcp": 2.6,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
