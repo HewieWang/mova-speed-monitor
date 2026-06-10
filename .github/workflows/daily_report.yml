@@ -55,7 +55,7 @@ jobs:
           
           # 邮件内容配置
           subject: 🚀 MOVA 性能监控日报 - ${{ env.DATE }}
-          to: wanghao@adsmarch.com,dongyawen@mova-tech.com # 接收人邮箱，多个用逗号隔开
+          to: wanghao@adsmarch.com,dongyawen@mova-tech.com,na.official.site@mova-tech.com # 接收人邮箱，多个用逗号隔开
           from: MOVA 性能监控助手
           
           # 核心：直接读取 Python 刚刚生成的 report.md 作为邮件正文
