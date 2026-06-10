@@ -166,6 +166,8 @@ def main():
     # 生成 Markdown 报告并发布到 GitHub Issues
     md_body = build_markdown_body(results)
     create_github_issue(md_body)
+    with open("report.md", "w", encoding="utf-8") as f:
+        f.write(md_body)
 
 if __name__ == "__main__":
     main()
