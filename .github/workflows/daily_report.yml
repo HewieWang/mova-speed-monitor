@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: write # 用于更新和 push 缓存文件
-  issues: write   # 新增：必须赋予写权限以自动创建 Issue
+  issues: write   # 必须赋予写权限以自动创建 Issue
 
 jobs:
   monitor:
@@ -27,7 +27,6 @@ jobs:
       - name: Run script
         env:
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
-          # 传递 GitHub 内置的 Token 凭证，脚本中创建 Issue 需要用到
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python performance_monitor.py
 
@@ -38,3 +37,28 @@ jobs:
           git add last_results.json
           git commit -m "Update performance cache" || echo "No changes to commit"
           git push
+
+      # ======= 新增步骤 1：获取当前日期（用于邮件标题） =======
+      - name: Get current date
+        id: date
+        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      # ======= 新增步骤 2：使用公共 Action 发送邮件 =======
+      - name: Send Email Notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # 邮件服务器配置（这里以网易 163 邮箱为例，如果是腾讯企业邮改成 smtp.exmail.qq.com）
+          server_address: smtp.163.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USER }}     # 你的发件邮箱地址
+          password: ${{ secrets.MAIL_PASS }}     # 你的邮箱授权码（非登录密码）
+          
+          # 邮件内容配置
+          subject: 🚀 MOVA 性能监控日报 - ${{ env.DATE }}
+          to: wanghao@adsmarch.com # 接收人邮箱，多个用逗号隔开
+          from: MOVA 性能监控助手
+          
+          # 核心：直接读取 Python 刚刚生成的 report.md 作为邮件正文
+          # html_body 配合 convert_markdown 插件会自动把 md 表格转成好看的邮件 HTML
+          html_body: file://report.md
+          convert_markdown: true
