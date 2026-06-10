@@ -123,6 +123,93 @@ def build_markdown_body(results):
     markdown += f"\n---\n*统计时间: {time.strftime('%Y-%m-%d %H:%M:%S')} (UTC)*"
     return markdown
 
+def build_html_body(results):
+    """新增：构造结构清晰、带有样式的 HTML 邮件正文"""
+    any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))
+    
+    # 状态概览横幅样式
+    if any_slow:
+        banner_color = "#fff2f2"
+        banner_border = "#ffccc7"
+        banner_text = "🚨 <strong>检测到部分页面加载缓慢，请注意优化！</strong>"
+    else:
+        banner_color = "#f6ffed"
+        banner_border = "#b7eb8f"
+        banner_text = "✅ <strong>所有页面性能表现良好。</strong>"
+
+    html = f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #333; line-height: 1.6; }}
+            .banner {{ padding: 12px 16px; background-color: {banner_color}; border: 1px solid {banner_border}; border-radius: 4px; margin-bottom: 20px; }}
+            table {{ width: 100%; border-collapse: collapse; margin-top: 10px; }}
+            th, td {{ padding: 10px 12px; text-align: left; border-bottom: 1px solid #f0f0f0; }}
+            th {{ background-color: #fafafa; font-weight: 600; color: #000; border-bottom: 2px solid #f0f0f0; }}
+            .badge {{ padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; }}
+            .badge-green {{ background-color: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }}
+            .badge-yellow {{ background-color: #fffbe6; color: #d46b08; border: 1px solid #ffe58f; }}
+            .badge-red {{ background-color: #fff2f2; color: #cf1322; border: 1px solid #ffccc7; }}
+            .badge-gray {{ background-color: #f5f5f5; color: #595959; border: 1px solid #d9d9d9; }}
+            .link-btn {{ color: #1890ff; text-decoration: none; }}
+            .link-btn:hover {{ text-decoration: underline; }}
+            .footer {{ margin-top: 25px; font-size: 12px; color: #8c8c8c; border-top: 1px solid #f0f0f0; padding-top: 10px; }}
+        </style>
+    </head>
+    <body>
+        <h2>📊 性能监控结果概览</h2>
+        <div class="banner">{banner_text}</div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>页面名称</th>
+                    <th>LCP 指标</th>
+                    <th>状态分类</th>
+                    <th>访问链接</th>
+                </tr>
+            </thead>
+            <tbody>
+    """
+
+    for r in results:
+        if r['lcp']:
+            # 根据性能分类定义不同的前端 Badge 样式
+            if r['category'] == "SLOW":
+                badge_cls = "badge-red"
+                icon = "🔴"
+            elif r['category'] == "AVERAGE":
+                badge_cls = "badge-yellow"
+                icon = "🟡"
+            else:
+                badge_cls = "badge-green"
+                icon = "🟢"
+                
+            cache_tag = " <span style='font-size:11px;color:#999;'>(历史)</span>" if r.get('is_cache') else ""
+            lcp_text = f"<strong>{r['lcp']}s</strong>"
+            category_text = f"<span class='badge {badge_cls}'>{icon} {r['category']}</span>{cache_tag}"
+        else:
+            lcp_text = "<span style='color:#ccc;'>-</span>"
+            category_text = f"<span class='badge badge-gray'>⚪ {r['status']}</span>"
+            
+        html += f"""
+                <tr>
+                    <td><strong>{r['name']}</strong></td>
+                    <td>{lcp_text}</td>
+                    <td>{category_text}</td>
+                    <td><a class="link-btn" href="{r['url']}" target="_blank">点击访问 →</a></td>
+                </tr>
+        """
+        
+    html += f"""
+            </tbody>
+        </table>
+        <div class="footer">统计时间: {time.strftime('%Y-%m-%d %H:%M:%S')} (UTC) | 来自 GitHub Actions 自动化监测</div>
+    </body>
+    </html>
+    """
+    return html
+    
 def create_github_issue(body):
     """调用 GitHub API 创建 Issue"""
     if not GITHUB_REPOSITORY or not GITHUB_TOKEN:
@@ -166,8 +253,9 @@ def main():
     # 生成 Markdown 报告并发布到 GitHub Issues
     md_body = build_markdown_body(results)
     create_github_issue(md_body)
-    with open("report.md", "w", encoding="utf-8") as f:
-        f.write(md_body)
+    html_body = build_html_body(results)
+    with open("email_report.html", "w", encoding="utf-8") as f:
+        f.write(html_body)
 
 if __name__ == "__main__":
     main()
