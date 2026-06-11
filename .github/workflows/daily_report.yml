@@ -28,6 +28,9 @@ jobs:
         env:
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # ======= 只需要在这里安全地把 Secrets 注入进来 =======
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
         run: python performance_monitor.py
 
       - name: Commit and push cache
@@ -37,36 +40,3 @@ jobs:
           git add last_results.json
           git commit -m "Update performance cache" || echo "No changes to commit"
           git push
-
-      # ======= 步骤 1：获取当前日期（用于邮件标题） =======
-      - name: Get current date
-        id: date
-        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-
-      # ======= 新增步骤：用系统命令读取 HTML 内容并写入 GitHub 环境变量 =======
-      # 这样可以强行保留 HTML 的代码结构，防止被识别为普通文本
-      - name: Read HTML Report
-        id: read_html
-        run: |
-          echo "HTML_CONTENT<<EOF" >> $GITHUB_ENV
-          cat email_report.html >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      # ======= 步骤 2：使用公共 Action 发送邮件 =======
-      - name: Send Email Notification
-        uses: dawidd6/action-send-mail@v3
-        with:
-          # 邮件服务器配置
-          server_address: smtp.163.com
-          server_port: 465
-          username: ${{ secrets.MAIL_USER }}     # 你的发件邮箱地址
-          password: ${{ secrets.MAIL_PASS }}     # 你的邮箱授权码（非登录密码）
-          
-          # 邮件内容配置
-          subject: 🚀 MOVA 性能监控日报 - ${{ env.DATE }}
-          to: wanghao@adsmarch.com
-          from: MOVA 性能监控助手
-
-          # 核心修复：不再用 file://，而是直接引用刚刚读取出来的 HTML 文本变量
-          html_body: ${{ env.HTML_CONTENT }}
-          convert_markdown: false
