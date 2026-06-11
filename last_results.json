@@ -97,7 +97,7 @@
   },
   "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
     "url": "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
-    "lcp": 3.67,
+    "lcp": 4.37,
     "category": "SLOW",
     "status": "Success",
     "is_cache": false,
@@ -105,7 +105,7 @@
   },
   "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
     "url": "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum",
-    "lcp": 3.73,
+    "lcp": 3.68,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
