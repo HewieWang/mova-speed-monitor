@@ -33,7 +33,7 @@
   },
   "https://us.mova.tech/blogs/cleaning-tips": {
     "url": "https://us.mova.tech/blogs/cleaning-tips",
-    "lcp": 3.72,
+    "lcp": 3.77,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -57,7 +57,7 @@
   },
   "https://us.mova.tech/": {
     "url": "https://us.mova.tech/",
-    "lcp": 2.43,
+    "lcp": 2.4,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -81,7 +81,7 @@
   },
   "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
     "url": "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum",
-    "lcp": 2.96,
+    "lcp": 2.91,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -97,7 +97,7 @@
   },
   "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
     "url": "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
-    "lcp": 4.33,
+    "lcp": 4.37,
     "category": "SLOW",
     "status": "Success",
     "is_cache": false,
@@ -113,7 +113,7 @@
   },
   "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
     "url": "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
-    "lcp": 3.52,
+    "lcp": 3.57,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -137,7 +137,7 @@
   },
   "https://us.mova.tech/products/mova-wet-dry-vacuum-x4-pro": {
     "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-x4-pro",
-    "lcp": 3.72,
+    "lcp": 3.77,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -169,7 +169,7 @@
   },
   "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum": {
     "url": "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum",
-    "lcp": 3.19,
+    "lcp": 3.64,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -177,7 +177,7 @@
   },
   "https://us.mova.tech/products/mova-wet-dry-vacuum-m10": {
     "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-m10",
-    "lcp": 3.72,
+    "lcp": 3.77,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
