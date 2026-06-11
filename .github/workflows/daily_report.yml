@@ -64,7 +64,7 @@ jobs:
           
           # 邮件内容配置
           subject: 🚀 MOVA 性能监控日报 - ${{ env.DATE }}
-          to: wanghao@adsmarch.com,dongyawen@mova-tech.com,na.official.site@mova-tech.com
+          to: wanghao@adsmarch.com
           from: MOVA 性能监控助手
 
           # 核心修复：不再用 file://，而是直接引用刚刚读取出来的 HTML 文本变量
