@@ -2,12 +2,15 @@ import requests
 import os
 import time
 import json
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
 
 # 配置区
 GOOGLE_API_KEY = os.getenv("PSI_API_KEY")
 CACHE_FILE = "last_results.json"  # 缓存文件名
 
-# 新增：从 GitHub Actions 环境中获取的变量
+# 从 GitHub Actions 环境中获取的变量
 GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY") # 格式如 "owner/repo"
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
@@ -43,7 +46,6 @@ CONFIG = {
 }
 
 def load_cache():
-    """读取上一次的运行结果"""
     if os.path.exists(CACHE_FILE):
         try:
             with open(CACHE_FILE, 'r', encoding='utf-8') as f:
@@ -53,7 +55,6 @@ def load_cache():
     return {}
 
 def save_cache(results):
-    """保存本次成功的结果到缓存"""
     cache_data = {}
     for r in results:
         if r.get('status') == "Success" and r.get('lcp'):
@@ -66,9 +67,7 @@ def save_cache(results):
             json.dump(old_cache, f, ensure_ascii=False, indent=2)
 
 def fetch_real_user_data(url, cache):
-    """抓取数据，失败则回退到 cache"""
     api_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}&key={GOOGLE_API_KEY}&strategy=mobile"
-    
     result = None
     try:
         response = requests.get(api_url, timeout=120)
@@ -98,10 +97,7 @@ def fetch_real_user_data(url, cache):
     return result
 
 def build_markdown_body(results):
-    """构造适合 GitHub Issues 展示的 Markdown 内容"""
     any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))
-    
-    # 状态概览横幅
     status_summary = "🚨 **检测到部分页面加载缓慢，请注意优化！**" if any_slow else "✅ **所有页面性能表现良好。**"
     
     markdown = f"### 📊 性能监控结果概览\n{status_summary}\n\n"
@@ -124,10 +120,7 @@ def build_markdown_body(results):
     return markdown
 
 def build_html_body(results):
-    """新增：构造结构清晰、带有样式的 HTML 邮件正文"""
     any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))
-    
-    # 状态概览横幅样式
     if any_slow:
         banner_color = "#fff2f2"
         banner_border = "#ffccc7"
@@ -141,7 +134,7 @@ def build_html_body(results):
     <html>
     <head>
         <style>
-            body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #333; line-height: 1.6; }}
+            body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #333; line-height: 1.6; }}
             .banner {{ padding: 12px 16px; background-color: {banner_color}; border: 1px solid {banner_border}; border-radius: 4px; margin-bottom: 20px; }}
             table {{ width: 100%; border-collapse: collapse; margin-top: 10px; }}
             th, td {{ padding: 10px 12px; text-align: left; border-bottom: 1px solid #f0f0f0; }}
@@ -152,14 +145,12 @@ def build_html_body(results):
             .badge-red {{ background-color: #fff2f2; color: #cf1322; border: 1px solid #ffccc7; }}
             .badge-gray {{ background-color: #f5f5f5; color: #595959; border: 1px solid #d9d9d9; }}
             .link-btn {{ color: #1890ff; text-decoration: none; }}
-            .link-btn:hover {{ text-decoration: underline; }}
             .footer {{ margin-top: 25px; font-size: 12px; color: #8c8c8c; border-top: 1px solid #f0f0f0; padding-top: 10px; }}
         </style>
     </head>
     <body>
         <h2>📊 性能监控结果概览</h2>
         <div class="banner">{banner_text}</div>
-        
         <table>
             <thead>
                 <tr>
@@ -171,10 +162,8 @@ def build_html_body(results):
             </thead>
             <tbody>
     """
-
     for r in results:
         if r['lcp']:
-            # 根据性能分类定义不同的前端 Badge 样式
             if r['category'] == "SLOW":
                 badge_cls = "badge-red"
                 icon = "🔴"
@@ -184,7 +173,6 @@ def build_html_body(results):
             else:
                 badge_cls = "badge-green"
                 icon = "🟢"
-                
             cache_tag = " <span style='font-size:11px;color:#999;'>(历史)</span>" if r.get('is_cache') else ""
             lcp_text = f"<strong>{r['lcp']}s</strong>"
             category_text = f"<span class='badge {badge_cls}'>{icon} {r['category']}</span>{cache_tag}"
@@ -200,7 +188,6 @@ def build_html_body(results):
                     <td><a class="link-btn" href="{r['url']}" target="_blank">点击访问 →</a></td>
                 </tr>
         """
-        
     html += f"""
             </tbody>
         </table>
@@ -209,28 +196,18 @@ def build_html_body(results):
     </html>
     """
     return html
-    
+
 def create_github_issue(body):
-    """调用 GitHub API 创建 Issue"""
     if not GITHUB_REPOSITORY or not GITHUB_TOKEN:
         print("缺少 GITHUB_REPOSITORY 或 GITHUB_TOKEN 环境变量，跳过 Issue 创建")
         return
-
     url = f"https://api.github.com/repos/{GITHUB_REPOSITORY}/issues"
     headers = {
         "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
-    # 标题带上当前日期
     title = f"🚀 MOVA 性能监控日报 - {time.strftime('%Y-%m-%d')}"
-    
-    payload = {
-        "title": title,
-        "body": body,
-        "labels": ["performance-report"] # 自动加上标签，方便外部人过滤筛选
-    }
-    
+    payload = {"title": title, "body": body, "labels": ["performance-report"]}
     try:
         response = requests.post(url, json=payload, headers=headers, timeout=10)
         if response.status_code == 201:
@@ -240,6 +217,32 @@ def create_github_issue(body):
     except Exception as e:
         print(f"发送 GitHub API 请求异常: {str(e)}")
 
+def send_html_email(html_content):
+    """直接由 Python 发送标准 HTML 邮件，彻底避免长文本在 YML 中截断报错"""
+    mail_host = "smtp.163.com"  # 如果是腾讯企业邮请改为 smtp.exmail.qq.com
+    mail_user = os.getenv("MAIL_USER")
+    mail_pass = os.getenv("MAIL_PASS")
+    # 收件人列表
+    mail_to_list = ["wanghao@adsmarch.com", "dongyawen@mova-tech.com", "na.official.site@mova-tech.com"]
+
+    if not mail_user or not mail_pass:
+        print("缺少 MAIL_USER 或 MAIL_PASS 环境变量，跳过邮件发送")
+        return
+
+    # 显式声明为 'html' 格式发送，保证客户端完美渲染
+    message = MIMEText(html_content, 'html', 'utf-8')
+    message['From'] = Header("MOVA 性能监控助手", 'utf-8')
+    message['To'] = Header(",".join(mail_to_list), 'utf-8')
+    message['Subject'] = Header(f"🚀 MOVA 性能监控日报 - {time.strftime('%Y-%m-%d')}", 'utf-8')
+
+    try:
+        smtp_obj = smtplib.SMTP_SSL(mail_host, 465, timeout=15)
+        smtp_obj.login(mail_user, mail_pass)
+        smtp_obj.sendmail(mail_user, mail_to_list, message.as_string())
+        print("邮件提醒发送成功（HTML 格式渲染）！")
+    except Exception as e:
+        print(f"邮件发送失败: {str(e)}")
+
 def main():
     cache = load_cache()
     results = []
@@ -248,14 +251,15 @@ def main():
         data['name'] = target['name']
         results.append(data)
     
-    save_cache(results) # 保存最新的成功数据
+    save_cache(results)
     
-    # 生成 Markdown 报告并发布到 GitHub Issues
+    # 1. 依然创建标准的 GitHub Issue
     md_body = build_markdown_body(results)
     create_github_issue(md_body)
+    
+    # 2. 直接在 Python 内把精美的 HTML 内容发出去
     html_body = build_html_body(results)
-    with open("email_report.html", "w", encoding="utf-8") as f:
-        f.write(html_body)
+    send_html_email(html_body)
 
 if __name__ == "__main__":
     main()
