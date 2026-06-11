@@ -38,16 +38,25 @@ jobs:
           git commit -m "Update performance cache" || echo "No changes to commit"
           git push
 
-      # ======= 新增步骤 1：获取当前日期（用于邮件标题） =======
+      # ======= 步骤 1：获取当前日期（用于邮件标题） =======
       - name: Get current date
         id: date
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      # ======= 新增步骤 2：使用公共 Action 发送邮件 =======
+      # ======= 新增步骤：用系统命令读取 HTML 内容并写入 GitHub 环境变量 =======
+      # 这样可以强行保留 HTML 的代码结构，防止被识别为普通文本
+      - name: Read HTML Report
+        id: read_html
+        run: |
+          echo "HTML_CONTENT<<EOF" >> $GITHUB_ENV
+          cat email_report.html >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # ======= 步骤 2：使用公共 Action 发送邮件 =======
       - name: Send Email Notification
         uses: dawidd6/action-send-mail@v3
         with:
-          # 邮件服务器配置（这里以网易 163 邮箱为例，如果是腾讯企业邮改成 smtp.exmail.qq.com）
+          # 邮件服务器配置
           server_address: smtp.163.com
           server_port: 465
           username: ${{ secrets.MAIL_USER }}     # 你的发件邮箱地址
@@ -58,5 +67,6 @@ jobs:
           to: wanghao@adsmarch.com,dongyawen@mova-tech.com,na.official.site@mova-tech.com
           from: MOVA 性能监控助手
 
-          html_body: file://email_report.html
+          # 核心修复：不再用 file://，而是直接引用刚刚读取出来的 HTML 文本变量
+          html_body: ${{ env.HTML_CONTENT }}
           convert_markdown: false
