@@ -17,8 +17,8 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 CONFIG = {
     "targets": [
         {"name": "US-Home", "url": "https://us.mova.tech/"},
-        {"name": "US-EasterEgg", "url": "https://us.mova.tech/pages/easter-egg-hunt"},
-        {"name": "CA-EasterEgg", "url": "https://ca.mova.tech/pages/easter-egg-hunt"},
+        {"name": "US-PD", "url": "https://us.mova.tech/pages/summer-sale"},
+        {"name": "CA-PD", "url": "https://ca.mova.tech/pages/summer-sale"},
         {"name": "US-GroupBuy", "url": "https://us.mova.tech/pages/group-buying"},
         {"name": "CA-GroupBuy", "url": "https://ca.mova.tech/pages/group-buying"},
         {"name": "US-BestOffer", "url": "https://us.mova.tech/pages/deals"},
