@@ -162,7 +162,7 @@
   "https://us.mova.tech/products/mova-z60-ultra-roller-complete": {
     "url": "https://us.mova.tech/products/mova-z60-ultra-roller-complete",
     "lcp": 3.23,
-    "category": "SLOW",
+    "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
     "name": "US-Z60"
@@ -210,7 +210,7 @@
   "https://us.mova.tech/pages/summer-sale": {
     "url": "https://us.mova.tech/pages/summer-sale",
     "lcp": 3.12,
-    "category": "SLOW",
+    "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
     "name": "US-PD"
