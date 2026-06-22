@@ -97,8 +97,8 @@
   },
   "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
     "url": "https://us.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
-    "lcp": 4.63,
-    "category": "SLOW",
+    "lcp": 3.63,
+    "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
     "name": "US-1000"
