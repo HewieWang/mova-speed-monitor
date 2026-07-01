@@ -161,8 +161,8 @@
   },
   "https://us.mova.tech/products/mova-z60-ultra-roller-complete": {
     "url": "https://us.mova.tech/products/mova-z60-ultra-roller-complete",
-    "lcp": 3.16,
-    "category": "AVERAGE",
+    "lcp": 4.23,
+    "category": "SLOW",
     "status": "Success",
     "is_cache": false,
     "name": "US-Z60"
@@ -177,7 +177,7 @@
   },
   "https://us.mova.tech/products/mova-wet-dry-vacuum-m10": {
     "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-m10",
-    "lcp": 3.46,
+    "lcp": 3.41,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
@@ -193,7 +193,7 @@
   },
   "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10": {
     "url": "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10",
-    "lcp": 2.45,
+    "lcp": 2.43,
     "category": "FAST",
     "status": "Success",
     "is_cache": false,
@@ -209,7 +209,7 @@
   },
   "https://us.mova.tech/pages/summer-sale": {
     "url": "https://us.mova.tech/pages/summer-sale",
-    "lcp": 3.12,
+    "lcp": 3.87,
     "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
