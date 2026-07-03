@@ -161,8 +161,8 @@
   },
   "https://us.mova.tech/products/mova-z60-ultra-roller-complete": {
     "url": "https://us.mova.tech/products/mova-z60-ultra-roller-complete",
-    "lcp": 4.23,
-    "category": "SLOW",
+    "lcp": 3.23,
+    "category": "AVERAGE",
     "status": "Success",
     "is_cache": false,
     "name": "US-Z60"
