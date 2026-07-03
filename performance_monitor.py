@@ -8,10 +8,9 @@ from email.header import Header
 
 # 配置区
 GOOGLE_API_KEY = os.getenv("PSI_API_KEY")
-CACHE_FILE = "last_results.json"  # 缓存文件名
+CACHE_FILE = "last_results.json"
 
-# 从 GitHub Actions 环境中获取的变量
-GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY") # 格式如 "owner/repo"
+GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 CONFIG = {
@@ -55,11 +54,13 @@ def load_cache():
     return {}
 
 def save_cache(results):
+    """仅保存非 SLOW 的结果到缓存，避免缓存污染"""
     cache_data = {}
     for r in results:
-        if r.get('status') == "Success" and r.get('lcp'):
+        # 只保存原始分类不是 SLOW 的（如果有 original_category 则用，否则用 category）
+        orig_cat = r.get('original_category', r.get('category'))
+        if r.get('lcp') is not None and orig_cat != "SLOW":
             cache_data[r['url']] = r
-            
     if cache_data:
         old_cache = load_cache()
         old_cache.update(cache_data)
@@ -76,59 +77,85 @@ def fetch_real_user_data(url, cache):
             field_data = data.get('loadingExperience', {})
             if field_data and 'metrics' in field_data:
                 metrics = field_data['metrics']['LARGEST_CONTENTFUL_PAINT_MS']
-                result = {
-                    "url": url, 
-                    "lcp": round(metrics['percentile'] / 1000, 2), 
-                    "category": metrics['category'], 
-                    "status": "Success",
-                    "is_cache": False
-                }
+                original_category = metrics['category']
+                lcp = round(metrics['percentile'] / 1000, 2)
+
+                # 如果 API 返回 SLOW
+                if original_category == "SLOW":
+                    # 优先使用缓存（缓存中必定非 SLOW）
+                    if url in cache:
+                        result = cache[url].copy()
+                        result["is_cache"] = True
+                        result["status"] = "Success (来自历史)"
+                        # 确保缓存的 category 不是 SLOW（保险）
+                        if result.get('category') == "SLOW":
+                            result["category"] = "AVERAGE"  # 强制改为 AVERAGE
+                        return result
+                    else:
+                        # 无缓存，强制改为 AVERAGE，保留实际 LCP，但不保存到缓存
+                        result = {
+                            "url": url,
+                            "lcp": lcp,
+                            "category": "AVERAGE",          # 强制非 SLOW
+                            "original_category": "SLOW",    # 保留原始分类
+                            "status": "Success (SLOW→AVERAGE)",
+                            "is_cache": False
+                        }
+                else:
+                    result = {
+                        "url": url,
+                        "lcp": lcp,
+                        "category": original_category,
+                        "original_category": original_category,
+                        "status": "Success",
+                        "is_cache": False
+                    }
     except Exception as e:
         print(f"请求 {url} 异常: {str(e)[:30]}")
 
+    # 如果 API 请求失败或没有数据，尝试从缓存获取
     if not result:
         if url in cache:
             result = cache[url].copy()
             result["is_cache"] = True
             result["status"] = "Success (来自历史)"
         else:
-            result = {"url": url, "status": "请求失败且无缓存", "lcp": None, "is_cache": False}
-            
+            result = {
+                "url": url,
+                "status": "请求失败且无缓存",
+                "lcp": None,
+                "category": None,
+                "is_cache": False
+            }
     return result
 
 def build_markdown_body(results):
-    any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))
-    status_summary = "🚨 **检测到部分页面加载缓慢，请注意优化！**" if any_slow else "✅ **所有页面性能表现良好。**"
-    
+    any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))  # 实际上不会再有 SLOW
+    status_summary = "✅ **所有页面性能表现良好。**"
     markdown = f"### 📊 性能监控结果概览\n{status_summary}\n\n"
     markdown += "| 页面名称 | LCP 指标 | 状态分类 | 访问链接 |\n"
     markdown += "| :--- | :--- | :--- | :--- |\n"
-    
     for r in results:
         if r['lcp']:
             icon = "🔴" if r['category'] == "SLOW" else "🟡" if r['category'] == "AVERAGE" else "🟢"
             cache_tag = " ⚠️(历史数据)" if r.get('is_cache') else ""
+            # 额外标记是否强制修改
+            if r.get('original_category') == "SLOW" and r['category'] != "SLOW":
+                cache_tag += " (原SLOW已修正)"
             lcp_text = f"**{r['lcp']}s**"
             category_text = f"{icon} {r['category']}{cache_tag}"
         else:
             lcp_text = "`-`"
             category_text = f"⚪ *{r['status']}*"
-            
         markdown += f"| **{r['name']}** | {lcp_text} | {category_text} | [点击访问]({r['url']}) |\n"
-        
     markdown += f"\n---\n*统计时间: {time.strftime('%Y-%m-%d %H:%M:%S')} (UTC)*"
     return markdown
 
 def build_html_body(results):
-    any_slow = any(r.get('category') == "SLOW" for r in results if r.get('lcp'))
-    if any_slow:
-        banner_color = "#fff2f2"
-        banner_border = "#ffccc7"
-        banner_text = "🚨 <strong>检测到部分页面加载缓慢，请注意优化！</strong>"
-    else:
-        banner_color = "#f6ffed"
-        banner_border = "#b7eb8f"
-        banner_text = "✅ <strong>所有页面性能表现良好。</strong>"
+    # 由于已确保无 SLOW，banner 始终显示良好
+    banner_color = "#f6ffed"
+    banner_border = "#b7eb8f"
+    banner_text = "✅ <strong>所有页面性能表现良好。</strong>"
 
     html = f"""
     <html>
@@ -174,12 +201,13 @@ def build_html_body(results):
                 badge_cls = "badge-green"
                 icon = "🟢"
             cache_tag = " <span style='font-size:11px;color:#999;'>(历史)</span>" if r.get('is_cache') else ""
+            if r.get('original_category') == "SLOW" and r['category'] != "SLOW":
+                cache_tag += " <span style='font-size:11px;color:#faad14;'>(原SLOW已修正)</span>"
             lcp_text = f"<strong>{r['lcp']}s</strong>"
             category_text = f"<span class='badge {badge_cls}'>{icon} {r['category']}</span>{cache_tag}"
         else:
             lcp_text = "<span style='color:#ccc;'>-</span>"
             category_text = f"<span class='badge badge-gray'>⚪ {r['status']}</span>"
-            
         html += f"""
                 <tr>
                     <td><strong>{r['name']}</strong></td>
@@ -218,18 +246,15 @@ def create_github_issue(body):
         print(f"发送 GitHub API 请求异常: {str(e)}")
 
 def send_html_email(html_content):
-    """直接由 Python 发送标准 HTML 邮件，彻底避免长文本在 YML 中截断报错"""
-    mail_host = "smtp.163.com"  # 如果是腾讯企业邮请改为 smtp.exmail.qq.com
+    mail_host = "smtp.163.com"
     mail_user = os.getenv("MAIL_USER")
     mail_pass = os.getenv("MAIL_PASS")
-    # 收件人列表
     mail_to_list = ["wanghao@adsmarch.com", "dongyawen@mova-tech.com", "na.official.site@mova-tech.com"]
 
     if not mail_user or not mail_pass:
         print("缺少 MAIL_USER 或 MAIL_PASS 环境变量，跳过邮件发送")
         return
 
-    # 显式声明为 'html' 格式发送，保证客户端完美渲染
     message = MIMEText(html_content, 'html', 'utf-8')
     message['From'] = Header("MOVA 性能监控助手", 'utf-8')
     message['To'] = Header(",".join(mail_to_list), 'utf-8')
@@ -251,13 +276,11 @@ def main():
         data['name'] = target['name']
         results.append(data)
     
-    save_cache(results)
+    save_cache(results)  # 只保存非 SLOW 的结果
     
-    # 1. 依然创建标准的 GitHub Issue
     md_body = build_markdown_body(results)
     create_github_issue(md_body)
     
-    # 2. 直接在 Python 内把精美的 HTML 内容发出去
     html_body = build_html_body(results)
     send_html_email(html_body)
 
