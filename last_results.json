@@ -17,7 +17,7 @@
   },
   "https://us.mova.tech/pages/group-buying": {
     "url": "https://us.mova.tech/pages/group-buying",
-    "lcp": 2.1,
+    "lcp": 2.12,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -26,7 +26,7 @@
   },
   "https://ca.mova.tech/pages/group-buying": {
     "url": "https://ca.mova.tech/pages/group-buying",
-    "lcp": 1.93,
+    "lcp": 1.96,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -35,7 +35,7 @@
   },
   "https://us.mova.tech/blogs/cleaning-tips": {
     "url": "https://us.mova.tech/blogs/cleaning-tips",
-    "lcp": 2.1,
+    "lcp": 2.12,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -44,11 +44,11 @@
   },
   "https://ca.mova.tech/blogs/cleaning-tips": {
     "url": "https://ca.mova.tech/blogs/cleaning-tips",
-    "lcp": 1.87,
+    "lcp": 1.96,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "CA-Blog"
   },
   "https://ca.mova.tech/": {
@@ -56,8 +56,8 @@
     "lcp": 1.85,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-Home"
   },
   "https://us.mova.tech/": {
@@ -65,8 +65,8 @@
     "lcp": 2.08,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "US-Home"
   },
   "https://ca.mova.tech/pages/deals": {
@@ -74,13 +74,13 @@
     "lcp": 2.11,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "CA-BestOffer"
   },
   "https://us.mova.tech/pages/deals": {
     "url": "https://us.mova.tech/pages/deals",
-    "lcp": 2.19,
+    "lcp": 2.2,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -92,13 +92,13 @@
     "lcp": 1.93,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-V50"
   },
   "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner": {
     "url": "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner",
-    "lcp": 1.93,
+    "lcp": 1.96,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -116,7 +116,7 @@
   },
   "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
     "url": "https://us.mova.tech/products/mova-v50-ultra-complete-robot-vacuum",
-    "lcp": 2.01,
+    "lcp": 2.0,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -125,16 +125,16 @@
   },
   "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
     "url": "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower",
-    "lcp": 1.87,
+    "lcp": 1.96,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "CA-1000"
   },
   "https://us.mova.tech/products/mova-rover-x10-robotic-pool-cleaner": {
     "url": "https://us.mova.tech/products/mova-rover-x10-robotic-pool-cleaner",
-    "lcp": 2.1,
+    "lcp": 2.12,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -146,17 +146,17 @@
     "lcp": 1.56,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "US-Mobius"
   },
   "https://us.mova.tech/products/mova-wet-dry-vacuum-x4-pro": {
     "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-x4-pro",
-    "lcp": 2.09,
+    "lcp": 2.12,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "US-X4Pro"
   },
   "https://ca.mova.tech/products/mova-mobius-60-robot-vacuum": {
@@ -173,8 +173,8 @@
     "lcp": 1.93,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-X4Pro"
   },
   "https://us.mova.tech/products/mova-z60-ultra-roller-complete": {
@@ -182,13 +182,13 @@
     "lcp": 1.85,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "US-Z60"
   },
   "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum": {
     "url": "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum",
-    "lcp": 2.13,
+    "lcp": 2.16,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -197,7 +197,7 @@
   },
   "https://us.mova.tech/products/mova-wet-dry-vacuum-m10": {
     "url": "https://us.mova.tech/products/mova-wet-dry-vacuum-m10",
-    "lcp": 2.1,
+    "lcp": 2.12,
     "category": "FAST",
     "original_category": "FAST",
     "status": "Success",
@@ -209,8 +209,8 @@
     "lcp": 1.93,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-Z60"
   },
   "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10": {
@@ -227,8 +227,8 @@
     "lcp": 2.32,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-P10PU"
   },
   "https://us.mova.tech/pages/summer-sale": {
@@ -242,11 +242,11 @@
   },
   "https://ca.mova.tech/pages/summer-sale": {
     "url": "https://ca.mova.tech/pages/summer-sale",
-    "lcp": 1.89,
+    "lcp": 1.96,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "CA-PD"
   }
 }
