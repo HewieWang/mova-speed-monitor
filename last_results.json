@@ -56,8 +56,8 @@
     "lcp": 1.89,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-Home"
   },
   "https://us.mova.tech/": {
@@ -83,8 +83,8 @@
     "lcp": 2.2,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "US-BestOffer"
   },
   "https://ca.mova.tech/products/mova-v50-ultra-complete-robot-vacuum": {
@@ -92,8 +92,8 @@
     "lcp": 1.98,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-V50"
   },
   "https://ca.mova.tech/products/mova-rover-x10-robotic-pool-cleaner": {
@@ -128,8 +128,8 @@
     "lcp": 1.98,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-1000"
   },
   "https://us.mova.tech/products/mova-rover-x10-robotic-pool-cleaner": {
@@ -164,8 +164,8 @@
     "lcp": 1.98,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "CA-Mobius"
   },
   "https://ca.mova.tech/products/mova-wet-dry-vacuum-x4-pro": {
@@ -173,8 +173,8 @@
     "lcp": 1.98,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-X4Pro"
   },
   "https://us.mova.tech/products/mova-z60-ultra-roller-complete": {
@@ -188,11 +188,11 @@
   },
   "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum": {
     "url": "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum",
-    "lcp": 2.15,
+    "lcp": 2.13,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "US-P10PU"
   },
   "https://us.mova.tech/products/mova-wet-dry-vacuum-m10": {
@@ -236,17 +236,17 @@
     "lcp": 2.13,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "US-PD"
   },
   "https://ca.mova.tech/pages/summer-sale": {
     "url": "https://ca.mova.tech/pages/summer-sale",
-    "lcp": 1.97,
+    "lcp": 1.98,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "CA-PD"
   }
 }
