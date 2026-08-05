@@ -56,8 +56,8 @@
     "lcp": 1.88,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-Home"
   },
   "https://us.mova.tech/": {
@@ -119,8 +119,8 @@
     "lcp": 1.76,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "US-V50"
   },
   "https://ca.mova.tech/products/mova-lidax-ultra-1000-robot-lawn-mower": {
@@ -137,8 +137,8 @@
     "lcp": 2.14,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "US-X10"
   },
   "https://us.mova.tech/products/mova-mobius-60-robot-vacuum": {
@@ -155,8 +155,8 @@
     "lcp": 2.14,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "US-X4Pro"
   },
   "https://ca.mova.tech/products/mova-mobius-60-robot-vacuum": {
@@ -182,8 +182,8 @@
     "lcp": 1.71,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "US-Z60"
   },
   "https://us.mova.tech/products/p10-pro-ultra-robot-vacuum": {
@@ -209,8 +209,8 @@
     "lcp": 1.99,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success",
-    "is_cache": false,
+    "status": "Success (来自历史)",
+    "is_cache": true,
     "name": "CA-Z60"
   },
   "https://ca.mova.tech/products/mova-wet-dry-vacuum-m10": {
@@ -227,8 +227,8 @@
     "lcp": 2.45,
     "category": "FAST",
     "original_category": "FAST",
-    "status": "Success (来自历史)",
-    "is_cache": true,
+    "status": "Success",
+    "is_cache": false,
     "name": "CA-P10PU"
   },
   "https://us.mova.tech/pages/summer-sale": {
